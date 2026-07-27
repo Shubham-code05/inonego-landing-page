@@ -776,9 +776,9 @@
   </a>
 
   <!-- Lead Capture Popup Modal -->
-  <div id="leadPopupOverlay" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl relative w-full max-w-md overflow-hidden opacity-0 scale-95 transition-all duration-300 ease-out">
-      <button id="leadPopupClose" type="button" aria-label="Close" class="absolute top-4 right-5 z-10 text-slate-300 hover:text-white text-lg">
+  <div id="leadPopupOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-out;">
+    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl relative w-full max-w-md overflow-hidden">
+      <button id="leadPopupClose" type="button" aria-label="Close" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/70 text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -829,62 +829,32 @@
   </div>
 
   <script>
-    (function () {
-      var overlay = document.getElementById('leadPopupOverlay');
-      var card = document.getElementById('leadPopupCard');
+    document.addEventListener('DOMContentLoaded', function () {
+      var modal = document.getElementById('leadPopupOverlay');
       var closeBtn = document.getElementById('leadPopupClose');
       var form = document.getElementById('leadPopupForm');
-      var revealTimer = null;
-      var opened = false;
 
-      function openPopup() {
-        if (opened || localStorage.getItem('popupShown')) return;
-        opened = true;
-        localStorage.setItem('popupShown', 'true');
-        if (revealTimer) clearTimeout(revealTimer);
-        window.removeEventListener('scroll', onScroll);
-
-        overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
-        requestAnimationFrame(function () {
-          card.classList.remove('opacity-0', 'scale-95');
-          card.classList.add('opacity-100', 'scale-100');
-        });
-      }
+      setTimeout(function () {
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        setTimeout(function () {
+          modal.style.opacity = '1';
+        }, 20);
+      }, 300);
 
       function closePopup() {
-        card.classList.remove('opacity-100', 'scale-100');
-        card.classList.add('opacity-0', 'scale-95');
+        modal.style.opacity = '0';
         setTimeout(function () {
-          overlay.classList.add('hidden');
-          overlay.classList.remove('flex');
+          modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
         }, 300);
       }
 
-      function onScroll() {
-        var scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        if (scrollable > 0 && (window.scrollY / scrollable) >= 0.5) {
-          openPopup();
-        }
-      }
-
-      if (!localStorage.getItem('popupShown')) {
-        revealTimer = setTimeout(openPopup, 5000);
-        window.addEventListener('scroll', onScroll, { passive: true });
-      }
-
       closeBtn.addEventListener('click', closePopup);
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) closePopup();
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closePopup();
-      });
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        closePopup();
       });
-    })();
+    });
   </script>
 
 </body>
