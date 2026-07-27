@@ -775,5 +775,117 @@
     <i class="fa-brands fa-whatsapp text-xl"></i>
   </a>
 
+  <!-- Lead Capture Popup Modal -->
+  <div id="leadPopupOverlay" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl relative w-full max-w-md overflow-hidden opacity-0 scale-95 transition-all duration-300 ease-out">
+      <button id="leadPopupClose" type="button" aria-label="Close" class="absolute top-4 right-5 z-10 text-slate-300 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Header Accent -->
+      <div class="bg-[#0a0b22] border-b border-emerald-500/30 px-8 pt-8 pb-6 space-y-3">
+        <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full">
+          Free Consultation &mdash; No Commitment
+        </span>
+        <h3 class="text-2xl font-black text-white">Get a Free YouTube Growth Strategy</h3>
+        <p class="text-xs text-slate-300">Talk to our Google Ads experts today and scale your channel safely.</p>
+        <div class="h-px w-16 bg-emerald-500"></div>
+      </div>
+
+      <div class="p-8 space-y-6">
+        <form id="leadPopupForm" class="space-y-4">
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Name *</label>
+            <input type="text" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+          </div>
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">WhatsApp No. *</label>
+            <input type="tel" placeholder="+91 ..." class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+          </div>
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel Link</label>
+            <input type="url" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Service Needed</label>
+            <select class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+              <option value="">Select a Service</option>
+              <option>YouTube Video Advertising</option>
+              <option>YouTube Channel Promotion</option>
+              <option>YouTube Shorts Promotion</option>
+              <option>Custom / Enterprise Plan</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-[#00B67A] hover:bg-[#009e6a] text-white font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-lg shadow-emerald-600/20 transition">
+            Send Me My Free Plan &rarr;
+          </button>
+        </form>
+
+        <p class="text-center text-[11px] text-gray-500">
+          <span class="text-emerald-500 font-bold">&check;</span> 100% Free &bull; No spam, ever &bull; Reply within 24 hrs
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var overlay = document.getElementById('leadPopupOverlay');
+      var card = document.getElementById('leadPopupCard');
+      var closeBtn = document.getElementById('leadPopupClose');
+      var form = document.getElementById('leadPopupForm');
+      var revealTimer = null;
+      var opened = false;
+
+      function openPopup() {
+        if (opened || localStorage.getItem('popupShown')) return;
+        opened = true;
+        localStorage.setItem('popupShown', 'true');
+        if (revealTimer) clearTimeout(revealTimer);
+        window.removeEventListener('scroll', onScroll);
+
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        requestAnimationFrame(function () {
+          card.classList.remove('opacity-0', 'scale-95');
+          card.classList.add('opacity-100', 'scale-100');
+        });
+      }
+
+      function closePopup() {
+        card.classList.remove('opacity-100', 'scale-100');
+        card.classList.add('opacity-0', 'scale-95');
+        setTimeout(function () {
+          overlay.classList.add('hidden');
+          overlay.classList.remove('flex');
+        }, 300);
+      }
+
+      function onScroll() {
+        var scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollable > 0 && (window.scrollY / scrollable) >= 0.5) {
+          openPopup();
+        }
+      }
+
+      if (!localStorage.getItem('popupShown')) {
+        revealTimer = setTimeout(openPopup, 5000);
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+
+      closeBtn.addEventListener('click', closePopup);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closePopup();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closePopup();
+      });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        closePopup();
+      });
+    })();
+  </script>
+
 </body>
 </html>
