@@ -3,14 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inonego - YouTube Promotion Agency</title>
+
+  <!-- ===== SEO Meta Tags (edit freely per campaign/landing page) ===== -->
+  <title>Inonego - YouTube Promotion Agency | Google Ads Campaigns for Creators</title>
+  <meta name="description" content="INONEGO helps YouTube creators, brands, and businesses grow through official Google Ads video campaigns. Transparent pricing, audience targeting, and campaign reporting." />
+  <meta name="keywords" content="YouTube promotion, YouTube advertising agency, Google Ads campaign, YouTube channel growth, YouTube shorts promotion, video marketing" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.adstube.in/" />
+
+  <!-- Open Graph / Social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Inonego - YouTube Promotion Agency" />
+  <meta property="og:description" content="Promote your YouTube videos through official Google Ads campaigns designed to reach relevant audiences." />
+  <meta property="og:image" content="https://www.adstube.in/hero-banner.webp" />
+  <meta property="og:url" content="https://www.adstube.in/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroError: '' }">
+<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '' }">
 
   <!-- Top Bar (Inonego Style) -->
   <div class="bg-[#0a0b22] text-white text-xs py-2 px-6 hidden lg:block border-b border-slate-800">
@@ -73,30 +92,48 @@
           Promote your YouTube videos through Google Ads campaigns designed to reach audiences interested in your content. We help creators, brands, and businesses increase video visibility using official advertising methods.
         </p>
 
-        <!-- YouTube link input + Start Campaign CTA -->
-        <div>
-          <div class="border-2 border-gray-200 flex-col sm:flex-row gap-2 rounded-xl bg-white p-2 flex overflow-hidden shadow-sm">
-            <input
-              type="text"
-              x-model="heroUrl"
-              placeholder="Insert your YouTube video link..."
-              class="flex-1 focus:outline-none px-3 py-2 text-sm text-gray-900 placeholder-gray-400"
-            />
-            <button
-              @click="
-                if (!heroUrl.trim()) { heroError = 'Please paste your YouTube video link first.'; }
-                else if (!/^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})([?&].*)?$/.test(heroUrl.trim())) { heroError = 'Please enter a valid YouTube video URL.'; }
-                else { heroError = ''; modalOpen = true; }
-              "
-              class="w-full sm:w-auto px-6 py-3 text-white bg-emerald-500 hover:bg-emerald-600 shadow-lg flex gap-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-lg justify-center items-center transition"
+        <!-- Single-line Phone Contact Bar + Highlighted Action Buttons -->
+        <div class="space-y-3">
+          <!-- Phone / WhatsApp Number Contact Bar -->
+          <div>
+            <div class="border-2 border-gray-200 flex-col sm:flex-row gap-2 rounded-xl bg-white p-2 flex overflow-hidden shadow-sm">
+              <input
+                type="tel"
+                x-model="heroPhone"
+                @input="heroPhone = heroPhone.replace(/\D/g, '').slice(0, 10)"
+                inputmode="numeric"
+                maxlength="10"
+                placeholder="Enter your Phone / WhatsApp Number..."
+                class="flex-1 focus:outline-none px-3 py-2 text-sm text-gray-900 placeholder-gray-400"
+              />
+              <button
+                @click="
+                  if (!/^[6-9]\d{9}$/.test(heroPhone.trim())) { heroError = 'Please enter a valid phone number.'; }
+                  else { heroError = ''; sendHeroPhoneLead(heroPhone.trim()); modalOpen = true; }
+                "
+                class="w-full sm:w-auto px-6 py-3 text-white bg-emerald-500 hover:bg-emerald-600 shadow-lg flex gap-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-lg justify-center items-center transition"
+              >
+                START YOUR CAMPAIGN 🚀
+              </button>
+            </div>
+            <p x-show="heroError" x-cloak x-text="heroError" class="text-red-500 text-xs mt-2 font-semibold"></p>
+          </div>
+
+          <!-- 2 Highlighted Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="#pricing"
+              class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#0a0b22] hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-lg transition"
             >
-              Start Your Campaign <i class="fa-solid fa-rocket"></i>
+              Take a Plan <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+            <button
+              @click="modalOpen = true"
+              class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-amber-400 hover:bg-amber-500 text-slate-900 text-xs font-bold uppercase tracking-wider rounded-lg transition"
+            >
+              Take Consultation
             </button>
           </div>
-          <p x-show="heroError" x-cloak x-text="heroError" class="text-red-500 text-xs mt-2 font-semibold"></p>
-          <a href="#pricing" class="inline-block mt-3 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-emerald-600 transition">
-            or view All Plans <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
-          </a>
         </div>
 
         <!-- Trust badges -->
@@ -156,7 +193,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_STARTER_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -174,7 +211,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_GROWTH_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -192,7 +229,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_STANDARD_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -210,7 +247,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_BUSINESS_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -233,7 +270,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_ADVANCED_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -252,7 +289,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-emerald-500 text-white py-2.5 rounded text-xs font-bold hover:bg-emerald-600 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_PRO_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-emerald-500 text-white py-2.5 rounded text-xs font-bold hover:bg-emerald-600 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -270,7 +307,7 @@
           </div>
         </div>
         <div class="p-6 pt-0 flex space-x-2">
-          <button @click="modalOpen = true" class="w-1/2 bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</button>
+          <a href="https://www.payu.in/PASTE_ENTERPRISE_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
           <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
         </div>
       </div>
@@ -652,24 +689,28 @@
 
         <!-- Right Column: Enquiry Form -->
         <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl">
-          <form class="space-y-4" onsubmit="event.preventDefault();">
+          <form class="space-y-4" onsubmit="submitLeadForm(this, 'Contact Section Form', event); return false;">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Your Name *</label>
-                <input type="text" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+                <input type="text" name="name" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
               </div>
               <div>
                 <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Email Address *</label>
-                <input type="email" placeholder="yourmail@example.com" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+                <input type="email" name="email" placeholder="yourmail@example.com" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
               </div>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel URL</label>
-              <input type="url" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+              <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Phone Number *</label>
+              <input type="tel" name="phone" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="13" pattern="^(?:\+91[\-\s]?|0)?[6-9]\d{9}$" title="Enter a valid 10-digit phone number" oninput="sanitizePhoneInput(this)" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+            </div>
+            <div>
+              <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel URL (Optional)</label>
+              <input type="url" name="channel_link" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
             </div>
             <div>
               <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Select a Service</label>
-              <select class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+              <select name="service" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                 <option>YouTube Video Advertising</option>
                 <option>YouTube Channel Promotion</option>
                 <option>YouTube Shorts Promotion</option>
@@ -678,7 +719,7 @@
             </div>
             <div>
               <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Message</label>
-              <textarea placeholder="How can we help?" rows="4" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></textarea>
+              <textarea name="message" placeholder="How can we help?" rows="4" class="w-full bg-gray-50 text-xs px-4 py-3 rounded border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></textarea>
             </div>
             <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3.5 rounded shadow transition">
               Send Message
@@ -730,22 +771,22 @@
         <p class="text-xs text-gray-500 mt-1">Share your details and we'll send you a free growth plan.</p>
       </div>
 
-      <form class="space-y-4" onsubmit="event.preventDefault();">
+      <form class="space-y-4" @submit="submitLeadForm($event.target, 'Get Started Modal', $event, () => modalOpen = false)">
         <div>
           <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">NAME *</label>
-          <input type="text" placeholder="Your Name" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+          <input type="text" name="name" placeholder="Your Name" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
         </div>
         <div>
           <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">WHATSAPP NO. *</label>
-          <input type="tel" placeholder="+91 ..." class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+          <input type="tel" name="phone" :value="heroPhone" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="13" pattern="^(?:\+91[\-\s]?|0)?[6-9]\d{9}$" title="Enter a valid 10-digit phone number" oninput="sanitizePhoneInput(this)" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
         </div>
         <div>
-          <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">CHANNEL LINK *</label>
-          <input type="url" x-model="heroUrl" placeholder="https://youtube.com/..." class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+          <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">CHANNEL LINK (Optional)</label>
+          <input type="url" name="channel_link" x-model="heroUrl" placeholder="https://youtube.com/..." class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
         </div>
         <div>
           <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">SERVICE NEEDED *</label>
-          <select class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required>
+          <select name="service" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required>
             <option value="">Select a Service</option>
             <option>YouTube Video Advertising</option>
             <option>YouTube Channel Promotion</option>
@@ -787,7 +828,7 @@
         <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full">
           Free Consultation &mdash; No Commitment
         </span>
-        <h3 class="text-2xl font-black text-white">Get a Free YouTube Growth Strategy</h3>
+        <h3 class="text-2xl font-black text-white">Get a Free Quote</h3>
         <p class="text-xs text-slate-300">Talk to our Google Ads experts today and scale your channel safely.</p>
         <div class="h-px w-16 bg-emerald-500"></div>
       </div>
@@ -796,19 +837,19 @@
         <form id="leadPopupForm" class="space-y-4">
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Name *</label>
-            <input type="text" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+            <input type="text" name="name" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
           </div>
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">WhatsApp No. *</label>
-            <input type="tel" placeholder="+91 ..." class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+            <input type="tel" name="phone" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="13" pattern="^(?:\+91[\-\s]?|0)?[6-9]\d{9}$" title="Enter a valid 10-digit phone number" oninput="sanitizePhoneInput(this)" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel Link</label>
-            <input type="url" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+            <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel Link (Optional)</label>
+            <input type="url" name="channel_link" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
           </div>
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Service Needed</label>
-            <select class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+            <select name="service" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
               <option value="">Select a Service</option>
               <option>YouTube Video Advertising</option>
               <option>YouTube Channel Promotion</option>
@@ -820,10 +861,6 @@
             Send Me My Free Plan &rarr;
           </button>
         </form>
-
-        <p class="text-center text-[11px] text-gray-500">
-          <span class="text-emerald-500 font-bold">&check;</span> 100% Free &bull; No spam, ever &bull; Reply within 24 hrs
-        </p>
       </div>
     </div>
   </div>
@@ -852,9 +889,69 @@
 
       closeBtn.addEventListener('click', closePopup);
       form.addEventListener('submit', function (e) {
-        e.preventDefault();
+        submitLeadForm(form, 'Lead Capture Popup', e, closePopup);
       });
     });
+  </script>
+
+  <!-- ===== Lead submission: Google Sheet + Email notification ===== -->
+  <script>
+    // 1. Deploy the included Google Apps Script as a Web App (see setup instructions).
+    // 2. Paste the resulting /exec URL below. Leave the placeholder to disable network sends (forms still validate + reset).
+    const LEAD_ENDPOINT = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    function sanitizePhoneInput(el) {
+      var digitsPlus = el.value.replace(/[^\d+]/g, '');
+      var firstPlus = digitsPlus.indexOf('+') === 0 ? '+' : '';
+      el.value = firstPlus + digitsPlus.replace(/\+/g, '');
+    }
+
+    function isValidPhone(value) {
+      return /^(?:\+91[-\s]?|0)?[6-9]\d{9}$/.test(String(value || '').trim());
+    }
+
+    function submitLeadForm(form, sourceLabel, event, onSuccess) {
+      if (event && event.preventDefault) event.preventDefault();
+
+      var phoneField = form.querySelector('input[type="tel"]');
+      if (phoneField && !isValidPhone(phoneField.value)) {
+        phoneField.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+        phoneField.focus();
+        phoneField.reportValidity && phoneField.reportValidity();
+        return false;
+      }
+      if (phoneField) phoneField.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+
+      var formData = new FormData(form);
+      formData.append('source', sourceLabel);
+      formData.append('page_url', window.location.href);
+      formData.append('submitted_at', new Date().toISOString());
+
+      if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
+        // no-cors: Apps Script Web Apps don't return readable CORS headers to fetch,
+        // so we fire-and-forget and treat the request as sent once it leaves the browser.
+        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
+      }
+
+      form.reset();
+      if (typeof onSuccess === 'function') onSuccess();
+      window.alert('Thanks! We received your details and will reach out on WhatsApp shortly.');
+      return false;
+    }
+
+    // Quick-capture from the hero phone bar: sends just the phone number ahead of
+    // the full Get Started modal submission, so the lead is saved even if the
+    // visitor abandons the modal before finishing it.
+    function sendHeroPhoneLead(phone) {
+      if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
+        var formData = new FormData();
+        formData.append('phone', phone);
+        formData.append('source', 'Hero Quick Capture');
+        formData.append('page_url', window.location.href);
+        formData.append('submitted_at', new Date().toISOString());
+        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
+      }
+    }
   </script>
 
 </body>
