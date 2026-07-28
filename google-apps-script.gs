@@ -9,7 +9,7 @@
  * ===== SETUP =====
  * 1. Create a new Google Sheet. Rename the first tab to "Leads".
  *    In row 1, add these headers (must match exactly, in this order):
- *    Timestamp | Source | Name | Phone | Email | Channel Link | Service | Message | Page URL
+ *    Timestamp | Source | Name | Phone | Email | Channel Link | Plan | Service | Message | Page URL
  *
  * 2. In the Sheet, go to Extensions -> Apps Script. Delete any starter code
  *    and paste this entire file in.
@@ -46,6 +46,7 @@ function doPost(e) {
       phone: params.phone || '',
       email: params.email || '',
       channelLink: params.channel_link || '',
+      plan: params.plan || '',
       service: params.service || '',
       message: params.message || '',
       pageUrl: params.page_url || ''
@@ -69,7 +70,7 @@ function appendToSheet(row) {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['Timestamp', 'Source', 'Name', 'Phone', 'Email', 'Channel Link', 'Service', 'Message', 'Page URL']);
+    sheet.appendRow(['Timestamp', 'Source', 'Name', 'Phone', 'Email', 'Channel Link', 'Plan', 'Service', 'Message', 'Page URL']);
   }
   sheet.appendRow([
     row.timestamp,
@@ -78,6 +79,7 @@ function appendToSheet(row) {
     row.phone,
     row.email,
     row.channelLink,
+    row.plan,
     row.service,
     row.message,
     row.pageUrl
@@ -93,6 +95,7 @@ function sendNotificationEmail(row) {
     'Phone: ' + row.phone + '\n' +
     'Email: ' + row.email + '\n' +
     'Channel Link: ' + row.channelLink + '\n' +
+    'Plan: ' + row.plan + '\n' +
     'Service: ' + row.service + '\n' +
     'Message: ' + row.message + '\n' +
     'Page URL: ' + row.pageUrl + '\n' +

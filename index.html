@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '' }">
+<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '', selectedPlan: '' }">
 
   <!-- Top Bar (Inonego Style) -->
   <div class="bg-[#0a0b22] text-white text-xs py-2 px-6 hidden lg:block border-b border-slate-800">
@@ -72,7 +72,7 @@
 
       <!-- Get a Quote CTA -->
       <div class="flex items-center">
-        <button @click="modalOpen = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-6 py-4 text-xs uppercase tracking-wider transition shadow-inner flex items-center gap-2">
+        <button @click="selectedPlan = ''; modalOpen = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-6 py-4 text-xs uppercase tracking-wider transition shadow-inner flex items-center gap-2">
           Get a Quote <i class="fa-solid fa-arrow-right text-[10px]"></i>
         </button>
       </div>
@@ -111,7 +111,7 @@
               <button
                 @click="
                   if (!/^[6-9]\d{9}$/.test(heroPhone.trim())) { heroError = 'Please enter a valid phone number.'; }
-                  else { heroError = ''; sendHeroPhoneLead(heroPhone.trim()); modalOpen = true; }
+                  else { heroError = ''; selectedPlan = ''; sendHeroPhoneLead(heroPhone.trim()); modalOpen = true; }
                 "
                 class="w-full sm:w-auto px-6 py-3 text-white bg-emerald-500 hover:bg-emerald-600 shadow-lg flex gap-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-lg justify-center items-center transition"
               >
@@ -130,7 +130,7 @@
               Take a Plan <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </a>
             <button
-              @click="modalOpen = true"
+              @click="selectedPlan = ''; modalOpen = true"
               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-amber-400 hover:bg-amber-500 text-slate-900 text-xs font-bold uppercase tracking-wider rounded-lg transition"
             >
               Take Consultation
@@ -172,149 +172,276 @@
   </section>
 
   <!-- Pricing Plans Section -->
-  <section id="pricing" class="py-20 px-6 max-w-7xl mx-auto">
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-2">
+  <section id="pricing" class="py-20 px-6 max-w-7xl mx-auto" x-data="{ activeTab: 'reach' }">
+    <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
       <span class="text-xs font-extrabold uppercase text-red-500 tracking-wider">PRICING PLANS</span>
       <h2 class="text-3xl font-black text-slate-900">Choose Your Campaign Budget</h2>
       <p class="text-gray-600 text-sm">Transparent Google Ads campaign budgets for creators and businesses of every size. Campaign performance depends on your content, audience, and targeting.</p>
     </div>
 
-    <!-- Top 4 Plans -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Toggle Tabs -->
+    <div class="flex justify-center mb-12">
+      <div class="inline-flex bg-gray-100 rounded-full p-1 border border-gray-200 shadow-sm">
+        <button
+          @click="activeTab = 'reach'"
+          :class="activeTab === 'reach' ? 'bg-emerald-500 text-white shadow' : 'text-gray-600 hover:text-gray-900'"
+          class="px-5 sm:px-7 py-2.5 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider transition"
+        >
+          YouTube Reachs
+        </button>
+        <button
+          @click="activeTab = 'subs'"
+          :class="activeTab === 'subs' ? 'bg-emerald-500 text-white shadow' : 'text-gray-600 hover:text-gray-900'"
+          class="px-5 sm:px-7 py-2.5 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider transition"
+        >
+          YouTube Subscribers
+        </button>
+      </div>
+    </div>
 
-      <!-- Plan A -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">STARTER CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 250</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Small daily ad budget</p>
-            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Basic audience targeting</p>
-          </div>
+    <!-- Tab 1: YouTube Reachs -->
+    <div x-show="activeTab === 'reach'" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- GET PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Get Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹750</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 5,000+ Views*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_STARTER_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 7-10 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> No Password Required</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> 24/7 Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/E633A2A3FBB429EED89935B9F829D64F7E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
-      <!-- Plan B -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-blue-600 to-sky-500 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">GROWTH CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 800</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Moderate ad budget</p>
-            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Wider audience targeting</p>
-          </div>
+      <!-- SET PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-sky-400 to-blue-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Set Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹1,500</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 10,000+ Views*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_GROWTH_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
-        </div>
-      </div>
-
-      <!-- Standard Plan -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-900 p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">STANDARD CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 1,500</h3>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 7-10 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> No Password Required</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> 24/7 Customer Support</p>
           </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Expanded ad budget</p>
-            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Interest-based targeting</p>
-          </div>
-        </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_STANDARD_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+          <a href="https://payu.in/invoice/B86FDF53EEF2DCF49543350CDDF792C97E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
-      <!-- Business Plan -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-emerald-600 to-green-500 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">BUSINESS CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 3,000</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Larger ad budget</p>
-            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Campaign optimization support</p>
-          </div>
+      <!-- GO PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-900 p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Go Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹2,600</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 20,000+ Views*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_BUSINESS_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 10-15 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Audience Targeting Included</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Priority Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/75F9E1DE59F22A69A78F82CE8D825F517E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- WALK PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-emerald-600 to-green-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Walk Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹5,500</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 50,000+ Views*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 15-20 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Advanced Audience Targeting</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Priority Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/6203AE67FEE61BABB37D393EDD7F785F7E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- RUN PLAN (Most Popular) -->
+      <div class="bg-white rounded-2xl shadow-xl border-2 border-emerald-500 overflow-hidden flex flex-col relative transform lg:scale-105">
+        <span class="bg-emerald-500 text-white text-[10px] uppercase font-black tracking-wider px-3 py-1 absolute top-2 right-2 rounded z-10">Most Popular</span>
+        <div class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Run Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹10,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 1,00,000+ Views*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 20-30 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Advanced Audience Targeting</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Dedicated Account Manager</p>
+          </div>
+          <a href="https://payu.in/invoice/8D6FB5590456B2FEFDAC7B824E111ACA7E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- FLY PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Fly Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹8,00,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Target Reach: 10,00,000+ Views*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 50-90 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Google Ads&ndash;Powered Video Views</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Full Audience Targeting</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Dedicated Manager + Reports</p>
+          </div>
+          <a href="https://payu.in/invoice/0751E3C20D71E7FC7578B31AC6E2C0167E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
     </div>
 
-    <!-- Bottom 3 High Tier Plans -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Tab 2: YouTube Subscribers -->
+    <div x-show="activeTab === 'subs'" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <!-- Walking Plan -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-sky-500 to-cyan-500 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">ADVANCED CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 7,000</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-sky-500 mr-2"></i> Sustained ad budget</p>
-            <p><i class="fa-solid fa-check text-sky-500 mr-2"></i> Multi-region targeting</p>
-          </div>
+      <!-- TINY PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Tiny Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹500</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~100 Subscribers*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_ADVANCED_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 5-7 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> No Password Required</p>
+            <p><i class="fa-solid fa-check text-red-500 mr-2"></i> 24/7 Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/EC78447DEDD1C12BDBA0A85779B140DD7E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
-      <!-- Pro Campaign (Highlighted) -->
-      <div class="bg-white rounded-2xl shadow-xl border-2 border-emerald-500 overflow-hidden text-center flex flex-col justify-between relative transform scale-105">
-        <span class="bg-emerald-500 text-white text-[10px] uppercase font-black tracking-wider px-3 py-1 absolute top-2 right-2 rounded">POPULAR</span>
-        <div>
-          <div class="bg-gradient-to-r from-emerald-500 to-green-500 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">PRO CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 13,000</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> High ad budget</p>
-            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Full campaign reporting</p>
-          </div>
+      <!-- COMPACT PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-sky-400 to-blue-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Compact Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹1,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~200 Subscribers*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_PRO_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-emerald-500 text-white py-2.5 rounded text-xs font-bold hover:bg-emerald-600 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 7-10 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> No Password Required</p>
+            <p><i class="fa-solid fa-check text-blue-500 mr-2"></i> 24/7 Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/8D87EDC5AA126976421E03AC8403F7E47E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
-      <!-- Enterprise Campaign -->
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden text-center flex flex-col justify-between">
-        <div>
-          <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6">
-            <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">ENTERPRISE CAMPAIGN</p>
-            <h3 class="text-3xl font-black mt-1">₹ 1,20,000</h3>
-          </div>
-          <div class="p-6 space-y-3 text-xs text-gray-600 font-medium">
-            <p><i class="fa-solid fa-check text-indigo-500 mr-2"></i> Large-scale ad budget</p>
-            <p><i class="fa-solid fa-check text-indigo-500 mr-2"></i> Dedicated campaign manager</p>
-          </div>
+      <!-- MODERATE PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-900 p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Moderate Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹2,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~500 Subscribers*</p>
         </div>
-        <div class="p-6 pt-0 flex space-x-2">
-          <a href="https://www.payu.in/PASTE_ENTERPRISE_PLAN_PAYU_LINK" target="_blank" rel="noopener" class="w-1/2 inline-flex items-center justify-center bg-[#0a0b22] text-white py-2.5 rounded text-xs font-bold hover:bg-slate-800 transition">Start Campaign</a>
-          <button @click="modalOpen = true" class="w-1/2 border border-gray-300 text-gray-700 py-2.5 rounded text-xs font-bold hover:bg-gray-50 transition">Know More</button>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 10-15 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> No Password Required</p>
+            <p><i class="fa-solid fa-check text-amber-500 mr-2"></i> Priority Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/E3A7B6987138EC2FAC3E85C3E68ACFCB7E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- AMPLE PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-emerald-600 to-green-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Ample Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹4,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~1,000 Subscribers*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 15-20 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Audience Targeting Included</p>
+            <p><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Priority Customer Support</p>
+          </div>
+          <a href="https://payu.in/invoice/C72221C07D04FB6A3EF038C5A2B9FDB47E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- HUGE PLAN (Most Popular) -->
+      <div class="bg-white rounded-2xl shadow-xl border-2 border-emerald-500 overflow-hidden flex flex-col relative transform lg:scale-105">
+        <span class="bg-emerald-500 text-white text-[10px] uppercase font-black tracking-wider px-3 py-1 absolute top-2 right-2 rounded z-10">Most Popular</span>
+        <div class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Huge Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹18,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~5,000 Subscribers*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 30-45 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Advanced Audience Targeting</p>
+            <p><i class="fa-solid fa-check text-cyan-500 mr-2"></i> Dedicated Account Manager</p>
+          </div>
+          <a href="https://payu.in/invoice/0EBAC007D0C9C7726958B0D116545C137E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
+        </div>
+      </div>
+
+      <!-- GIANT PLAN -->
+      <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 text-center">
+          <p class="text-xs font-extrabold uppercase tracking-wider opacity-90">Giant Plan</p>
+          <h3 class="text-3xl font-black mt-1">₹35,000</h3>
+          <p class="text-xs font-bold mt-1 opacity-90">Growth Target: ~10,000 Subscribers*</p>
+        </div>
+        <div class="p-6 space-y-4 flex-1 flex flex-col text-center">
+          <span class="inline-block self-center bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">Delivery in 45-60 Days</span>
+          <div class="space-y-2 text-xs text-gray-600 font-medium text-left flex-1">
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Subscriber-Focused Ad Targeting</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Organic Traffic Only</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Full Audience Targeting</p>
+            <p><i class="fa-solid fa-check text-purple-500 mr-2"></i> Dedicated Manager + Reports</p>
+          </div>
+          <a href="https://payu.in/invoice/C9D7890A83190960F65E50F557054AD67E7188F585220534625FAFB9C5BA7A91/C5D00C5F83D0C58C84CA93F695887F71" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-lg transition">Buy Now</a>
         </div>
       </div>
 
     </div>
+
+    <p class="text-center text-[11px] text-gray-400 mt-8 max-w-3xl mx-auto">
+      *Figures reflect campaign targeting estimates, not guaranteed outcomes. Actual reach, views, and subscriber growth depend on your content, audience response, and targeting &mdash; see our full disclaimer below.
+    </p>
   </section>
 
   <!-- Our Story Section -->
@@ -463,6 +590,57 @@
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-3">
           <div class="w-8 h-8 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center font-bold text-sm">6</div>
           <h4 class="font-bold text-gray-900 text-sm">Monitor campaign performance through reports</h4>
+        </div>
+      </div>
+
+      <!-- Where Your Ads Will Appear -->
+      <div class="mt-16 pt-12 border-t border-gray-100">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div class="bg-white rounded-2xl border border-gray-200 shadow-lg p-3 sm:p-4 order-2 md:order-1">
+            <img
+              src="./How It Works banner.jpeg"
+              alt="Examples of where INONEGO YouTube ad placements appear: in-feed, skippable video, and targeted viewership"
+              class="w-full h-auto rounded-xl"
+              style="max-width: 100%; height: auto;"
+              loading="lazy"
+            />
+          </div>
+          <div class="space-y-5 order-1 md:order-2">
+            <span class="text-xs font-extrabold uppercase text-emerald-600 tracking-wider">Ad Placements</span>
+            <h3 class="text-2xl md:text-3xl font-black text-slate-900">Where Your Ads Will Appear</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Your campaign runs across official Google Ads YouTube placements, reaching viewers already watching relevant content.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 shrink-0 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-rectangle-list text-sm"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-sm">In-Feed Ads</h4>
+                  <p class="text-xs text-gray-500">Shown alongside YouTube search results and suggested videos.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 shrink-0 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-forward text-sm"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-sm">Skippable Video Ads</h4>
+                  <p class="text-xs text-gray-500">Play before, during, or after other YouTube videos.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 shrink-0 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-bullseye text-sm"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-sm">Targeted Viewership</h4>
+                  <p class="text-xs text-gray-500">Reaches audiences based on interests, region, and viewing behavior.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -778,6 +956,11 @@
       </div>
 
       <form class="space-y-4" @submit="submitLeadForm($event.target, 'Get Started Modal', $event, () => modalOpen = false)">
+        <div x-show="selectedPlan" x-cloak class="flex items-center justify-between gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5">
+          <span class="text-[10px] font-extrabold uppercase text-emerald-700 tracking-wider">Selected Plan</span>
+          <span class="text-xs font-bold text-emerald-800" x-text="selectedPlan"></span>
+        </div>
+        <input type="hidden" name="plan" :value="selectedPlan" />
         <div>
           <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">NAME *</label>
           <input type="text" name="name" placeholder="Your Name" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
@@ -904,7 +1087,7 @@
   <script>
     // 1. Deploy the included Google Apps Script as a Web App (see setup instructions).
     // 2. Paste the resulting /exec URL below. Leave the placeholder to disable network sends (forms still validate + reset).
-    const LEAD_ENDPOINT = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbw6uoCWylupOAOMVAcadG8uPtFygV5g8ohmZqn_jzv-TNf-JSrWILWURcyDbvlqBDGt/exec";
 
     function sanitizePhoneInput(el) {
       var digitsPlus = el.value.replace(/[^\d+]/g, '');
@@ -941,7 +1124,7 @@
 
       form.reset();
       if (typeof onSuccess === 'function') onSuccess();
-      window.alert('Thanks! We received your details and will reach out on WhatsApp shortly.');
+      window.alert('Thank you! Your request has been received. We will contact you soon.');
       return false;
     }
 
