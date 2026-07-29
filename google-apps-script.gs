@@ -33,7 +33,7 @@
  */
 
 const SHEET_NAME = 'Leads';
-const NOTIFY_EMAIL = 'contact@adstube.in'; // <-- change to the inbox that should get lead alerts
+const NOTIFY_EMAIL = 'contact@inonego.in'; // <-- change to the inbox that should get lead alerts
 
 function doPost(e) {
   try {
