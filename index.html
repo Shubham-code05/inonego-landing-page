@@ -9,7 +9,7 @@
   <meta name="description" content="INONEGO helps YouTube creators, brands, and businesses grow through official Google Ads video campaigns. Transparent pricing, audience targeting, and campaign reporting." />
   <meta name="keywords" content="YouTube promotion, YouTube advertising agency, Google Ads campaign, YouTube channel growth, YouTube shorts promotion, video marketing" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.inonego.in/" />
+  <link rel="canonical" href="https://www.inonego.in/" />                                                                                          
 
   <!-- Open Graph / Social sharing -->
   <meta property="og:type" content="website" />
@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '', selectedPlan: '' }">
+<body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '', selectedPlan: '', modalSource: 'Get Started Modal' }">
 
   <!-- Top Bar (Inonego Style) -->
   <div class="bg-[#0a0b22] text-white text-xs py-2 px-6 hidden lg:block border-b border-slate-800">
@@ -72,7 +72,7 @@
 
       <!-- Get a Quote CTA -->
       <div class="flex items-center">
-        <button @click="selectedPlan = ''; modalOpen = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-6 py-4 text-xs uppercase tracking-wider transition shadow-inner flex items-center gap-2">
+        <button @click="selectedPlan = ''; modalSource = 'Header Get a Quote'; modalOpen = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-6 py-4 text-xs uppercase tracking-wider transition shadow-inner flex items-center gap-2">
           Get a Quote <i class="fa-solid fa-arrow-right text-[10px]"></i>
         </button>
       </div>
@@ -111,7 +111,7 @@
               <button
                 @click="
                   if (!/^[6-9]\d{9}$/.test(heroPhone.trim())) { heroError = 'Please enter a valid phone number.'; }
-                  else { heroError = ''; selectedPlan = ''; modalOpen = true; }
+                  else { heroError = ''; selectedPlan = ''; modalSource = 'Hero Phone Bar'; modalOpen = true; }
                 "
                 class="w-full sm:w-auto px-6 py-3 text-white bg-emerald-500 hover:bg-emerald-600 shadow-lg flex gap-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-lg justify-center items-center transition"
               >
@@ -130,7 +130,7 @@
               Take a Plan <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </a>
             <button
-              @click="selectedPlan = ''; modalOpen = true"
+              @click="selectedPlan = ''; modalSource = 'Hero Take Consultation'; modalOpen = true"
               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-amber-400 hover:bg-amber-500 text-slate-900 text-xs font-bold uppercase tracking-wider rounded-lg transition"
             >
               Take Consultation
@@ -955,7 +955,7 @@
         <p class="text-xs text-gray-500 mt-1">Share your details and we'll send you a free growth plan.</p>
       </div>
 
-      <form class="space-y-4" @submit="submitLeadForm($event.target, 'Get Started Modal', $event, () => modalOpen = false)">
+      <form class="space-y-4" @submit="submitLeadForm($event.target, modalSource, $event, () => modalOpen = false)">
         <div x-show="selectedPlan" x-cloak class="flex items-center justify-between gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5">
           <span class="text-[10px] font-extrabold uppercase text-emerald-700 tracking-wider">Selected Plan</span>
           <span class="text-xs font-bold text-emerald-800" x-text="selectedPlan"></span>
@@ -1054,6 +1054,25 @@
     </div>
   </div>
 
+  <!-- Thank You Overlay (shown instantly on any form submit) -->
+  <div id="thankYouOverlay" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.25s ease-out;">
+    <div class="bg-white rounded-2xl shadow-2xl relative w-full max-w-sm overflow-hidden text-center">
+      <button id="thankYouClose" type="button" aria-label="Close" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-emerald-500 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="px-8 pt-10 pb-8 space-y-4">
+        <div class="mx-auto w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+          <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-900">Thank You!</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">Your request has been received. Our team will contact you shortly.</p>
+        <button id="thankYouOk" type="button" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-xl shadow transition">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var modal = document.getElementById('leadPopupOverlay');
@@ -1087,7 +1106,7 @@
   <script>
     // 1. Deploy the included Google Apps Script as a Web App (see setup instructions).
     // 2. Paste the resulting /exec URL below. Leave the placeholder to disable network sends (forms still validate + reset).
-    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbw6uoCWylupOAOMVAcadG8uPtFygV5g8ohmZqn_jzv-TNf-JSrWILWURcyDbvlqBDGt/exec";
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbypxE0PaHb_z60O18cl3S8oyFYvZl-GNxradb4vGxDDbT8h7f6GVgScYHhuOKGpuMI/exec";
 
     function sanitizePhoneInput(el) {
       var digitsPlus = el.value.replace(/[^\d+]/g, '');
@@ -1098,6 +1117,33 @@
     function isValidPhone(value) {
       return /^(?:\+91[-\s]?|0)?[6-9]\d{9}$/.test(String(value || '').trim());
     }
+
+    function showThankYou() {
+      var overlay = document.getElementById('thankYouOverlay');
+      if (!overlay) return;
+      overlay.style.display = 'flex';
+      overlay.style.visibility = 'visible';
+      requestAnimationFrame(function () { overlay.style.opacity = '1'; });
+    }
+
+    function hideThankYou() {
+      var overlay = document.getElementById('thankYouOverlay');
+      if (!overlay) return;
+      overlay.style.opacity = '0';
+      setTimeout(function () {
+        overlay.style.display = 'none';
+        overlay.style.visibility = 'hidden';
+      }, 250);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var overlay = document.getElementById('thankYouOverlay');
+      document.getElementById('thankYouClose').addEventListener('click', hideThankYou);
+      document.getElementById('thankYouOk').addEventListener('click', hideThankYou);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) hideThankYou();
+      });
+    });
 
     function submitLeadForm(form, sourceLabel, event, onSuccess) {
       if (event && event.preventDefault) event.preventDefault();
@@ -1117,14 +1163,14 @@
       formData.append('submitted_at', new Date().toISOString());
 
       if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
-        // no-cors: Apps Script Web Apps don't return readable CORS headers to fetch,
-        // so we fire-and-forget and treat the request as sent once it leaves the browser.
-        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
+        // no-cors + keepalive: fire-and-forget so the UI never waits on this request,
+        // and keepalive lets it finish even if the user navigates away immediately after.
+        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: formData }).catch(function () {});
       }
 
       form.reset();
       if (typeof onSuccess === 'function') onSuccess();
-      window.alert('Thank you! Your request has been received. We will contact you soon.');
+      showThankYou();
       return false;
     }
 
