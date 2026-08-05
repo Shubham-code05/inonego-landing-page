@@ -111,7 +111,7 @@
               <button
                 @click="
                   if (!/^[6-9]\d{9}$/.test(heroPhone.trim())) { heroError = 'Please enter a valid phone number.'; }
-                  else { heroError = ''; selectedPlan = ''; sendHeroPhoneLead(heroPhone.trim()); modalOpen = true; }
+                  else { heroError = ''; selectedPlan = ''; modalOpen = true; }
                 "
                 class="w-full sm:w-auto px-6 py-3 text-white bg-emerald-500 hover:bg-emerald-600 shadow-lg flex gap-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-lg justify-center items-center transition"
               >
@@ -1128,19 +1128,6 @@
       return false;
     }
 
-    // Quick-capture from the hero phone bar: sends just the phone number ahead of
-    // the full Get Started modal submission, so the lead is saved even if the
-    // visitor abandons the modal before finishing it.
-    function sendHeroPhoneLead(phone) {
-      if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
-        var formData = new FormData();
-        formData.append('phone', phone);
-        formData.append('source', 'Hero Quick Capture');
-        formData.append('page_url', window.location.href);
-        formData.append('submitted_at', new Date().toISOString());
-        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
-      }
-    }
   </script>
 
 </body>
