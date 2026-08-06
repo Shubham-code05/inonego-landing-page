@@ -175,7 +175,7 @@
   <!-- ===== Lead submission: Google Sheet + Email notification ===== -->
   <script>
     // Same Google Apps Script Web App endpoint used across the site (see google-apps-script.gs).
-    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbw6uoCWylupOAOMVAcadG8uPtFygV5g8ohmZqn_jzv-TNf-JSrWILWURcyDbvlqBDGt/exec";
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbxUtUtBrVQml3WGQDkv4yYV1mo3A59H70phPZL6HplPTGKQX2JMgoe_2uImmMl9J-XX/exec";
 
     function sanitizePhoneInput(el) {
       var digitsPlus = el.value.replace(/[^\d+]/g, '');
@@ -199,20 +199,27 @@
       }
       if (phoneField) phoneField.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
 
-      var formData = new FormData(form);
-      formData.append('source', sourceLabel);
-      formData.append('page_url', window.location.href);
-      formData.append('submitted_at', new Date().toISOString());
+      // Standardize this form's fields (name, phone, plan, message) into the fixed
+      // 7-key payload the Apps Script expects: source, name, phone, email, service, message, page_url.
+      var raw = new FormData(form);
+      var payload = new FormData();
+      payload.append('source', sourceLabel);
+      payload.append('name', String(raw.get('name') || '').trim());
+      payload.append('phone', String(raw.get('phone') || '').trim());
+      payload.append('email', String(raw.get('email') || '').trim());
+      payload.append('service', String(raw.get('plan') || raw.get('service') || '').trim());
+      payload.append('message', [raw.get('channel_link'), raw.get('message')].filter(Boolean).join(' | '));
+      payload.append('page_url', window.location.href);
 
       if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
         // no-cors: Apps Script Web Apps don't return readable CORS headers to fetch,
         // so we fire-and-forget and treat the request as sent once it leaves the browser.
-        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData }).catch(function () {});
+        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', body: payload }).catch(function () {});
       }
 
       form.reset();
       if (typeof onSuccess === 'function') onSuccess();
-      window.alert('Thank you! Your request has been received. We will contact you soon.');
+      window.location.href = 'thank-you.html';
       return false;
     }
   </script>

@@ -1054,25 +1054,6 @@
     </div>
   </div>
 
-  <!-- Thank You Overlay (shown instantly on any form submit) -->
-  <div id="thankYouOverlay" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.25s ease-out;">
-    <div class="bg-white rounded-2xl shadow-2xl relative w-full max-w-sm overflow-hidden text-center">
-      <button id="thankYouClose" type="button" aria-label="Close" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-emerald-500 hover:text-white transition-colors">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div class="px-8 pt-10 pb-8 space-y-4">
-        <div class="mx-auto w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-          <i class="fa-solid fa-check text-2xl text-emerald-500"></i>
-        </div>
-        <h3 class="text-xl font-black text-slate-900">Thank You!</h3>
-        <p class="text-xs text-slate-500 leading-relaxed">Your request has been received. Our team will contact you shortly.</p>
-        <button id="thankYouOk" type="button" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-widest py-3 rounded-xl shadow transition">
-          Done
-        </button>
-      </div>
-    </div>
-  </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var modal = document.getElementById('leadPopupOverlay');
@@ -1106,7 +1087,7 @@
   <script>
     // 1. Deploy the included Google Apps Script as a Web App (see setup instructions).
     // 2. Paste the resulting /exec URL below. Leave the placeholder to disable network sends (forms still validate + reset).
-    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbypxE0PaHb_z60O18cl3S8oyFYvZl-GNxradb4vGxDDbT8h7f6GVgScYHhuOKGpuMI/exec";
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbxUtUtBrVQml3WGQDkv4yYV1mo3A59H70phPZL6HplPTGKQX2JMgoe_2uImmMl9J-XX/exec";
 
     function sanitizePhoneInput(el) {
       var digitsPlus = el.value.replace(/[^\d+]/g, '');
@@ -1117,33 +1098,6 @@
     function isValidPhone(value) {
       return /^(?:\+91[-\s]?|0)?[6-9]\d{9}$/.test(String(value || '').trim());
     }
-
-    function showThankYou() {
-      var overlay = document.getElementById('thankYouOverlay');
-      if (!overlay) return;
-      overlay.style.display = 'flex';
-      overlay.style.visibility = 'visible';
-      requestAnimationFrame(function () { overlay.style.opacity = '1'; });
-    }
-
-    function hideThankYou() {
-      var overlay = document.getElementById('thankYouOverlay');
-      if (!overlay) return;
-      overlay.style.opacity = '0';
-      setTimeout(function () {
-        overlay.style.display = 'none';
-        overlay.style.visibility = 'hidden';
-      }, 250);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var overlay = document.getElementById('thankYouOverlay');
-      document.getElementById('thankYouClose').addEventListener('click', hideThankYou);
-      document.getElementById('thankYouOk').addEventListener('click', hideThankYou);
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) hideThankYou();
-      });
-    });
 
     function submitLeadForm(form, sourceLabel, event, onSuccess) {
       if (event && event.preventDefault) event.preventDefault();
@@ -1157,20 +1111,27 @@
       }
       if (phoneField) phoneField.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
 
-      var formData = new FormData(form);
-      formData.append('source', sourceLabel);
-      formData.append('page_url', window.location.href);
-      formData.append('submitted_at', new Date().toISOString());
+      // Standardize every form's fields (which vary: channel_link, plan, service, message...)
+      // into the fixed 7-key payload the Apps Script expects: source, name, phone, email, service, message, page_url.
+      var raw = new FormData(form);
+      var payload = new FormData();
+      payload.append('source', sourceLabel);
+      payload.append('name', String(raw.get('name') || '').trim());
+      payload.append('phone', String(raw.get('phone') || '').trim());
+      payload.append('email', String(raw.get('email') || '').trim());
+      payload.append('service', String(raw.get('plan') || raw.get('service') || '').trim());
+      payload.append('message', [raw.get('channel_link'), raw.get('message')].filter(Boolean).join(' | '));
+      payload.append('page_url', window.location.href);
 
       if (LEAD_ENDPOINT.indexOf('PASTE_YOUR') === -1) {
         // no-cors + keepalive: fire-and-forget so the UI never waits on this request,
         // and keepalive lets it finish even if the user navigates away immediately after.
-        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: formData }).catch(function () {});
+        fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: payload }).catch(function () {});
       }
 
       form.reset();
       if (typeof onSuccess === 'function') onSuccess();
-      showThankYou();
+      window.location.href = 'thank-you.html';
       return false;
     }
 
