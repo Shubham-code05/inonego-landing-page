@@ -11,8 +11,8 @@
 
   <title>🇮🇳 Special Independence Day Offers | Inonego</title>
 
-  <link rel="icon" type="image/png" href="./inonego-logo-header.png" />
-  <link rel="apple-touch-icon" href="./inonego-logo-header.png" />
+  <link rel="icon" type="image/png" href="./Adstube-logo.png" />
+  <link rel="apple-touch-icon" href="./Adstube-logo.png" />
 
   <style>
     :root {
@@ -3133,26 +3133,19 @@
         </label>
 
         <label>
-          YouTube Channel Link <span>(Optional)</span>
+          Video URL <span>(Optional)</span>
           <input
-            type="url"
+            type="text"
             name="channel"
-            placeholder="https://youtube.com/@yourchannel"
+            placeholder="https://youtube.com/watch?v=..."
           />
         </label>
 
-        <label>
-          Service Needed
-          <select name="service">
-            <option value="" selected disabled>
-              Select a Service
-            </option>
-            <option>Revenue Plan</option>
-            <option>Special Subscriber Plan</option>
-            <option>Special Views Plan</option>
-            <option>Not Sure / General Enquiry</option>
-          </select>
-        </label>
+        <input
+          type="hidden"
+          name="service"
+          value="Independence Day Offer (13-15 Aug) - Lead Popup"
+        />
 
         <button type="submit" class="btn btn-primary full">
           Send Me My Free Plan →
@@ -3174,7 +3167,7 @@
     <nav class="container">
 
       <a class="logo" href="index.html">
-        <img src="./inonego-logo-header.png" alt="Inonego" class="logo-img" />
+        <img src="Adstube-logo.png" alt="Adstube Logo" class="logo-img" />
       </a>
 
       <div class="nav-links" id="navLinks">
@@ -3639,84 +3632,28 @@
               </div>
 
 
-              <div class="field" id="offerEmailField">
-
-                <label for="offerEmail">
-                  Email <span>(Optional)</span>
-                </label>
-
-                <input
-                  type="email"
-                  id="offerEmail"
-                  name="email"
-                  placeholder="yourmail@example.com"
-                  autocomplete="email"
-                />
-
-              </div>
-
-
               <div class="field" id="offerUrlField">
 
                 <label for="offerUrl">
-                  YouTube Channel Name <span>(Optional)</span>
+                  Video URL <span>(Optional)</span>
                 </label>
 
                 <input
                   type="text"
                   id="offerUrl"
                   name="channel"
-                  placeholder="Your YouTube channel name"
+                  placeholder="https://youtube.com/watch?v=..."
                   autocomplete="off"
                 />
 
               </div>
 
 
-              <div class="field" id="offerPlanField">
-
-                <label for="offerPlan">
-                  Select Offer / Plan <i>*</i>
-                </label>
-
-                <select id="offerPlan" name="service">
-                  <option value="" selected disabled>Choose an offer</option>
-                  <option>Monetization Plan (Without Views)</option>
-                  <option>Monetization Plan (With Views)</option>
-                  <option>Revenue Plan</option>
-                  <option>Special Subscribers Plan</option>
-                  <option>Special Views Plan</option>
-                  <option>Watch Hours &ndash; Bronze (200 Hrs)</option>
-                  <option>Watch Hours &ndash; Silver (500 Hrs)</option>
-                  <option>Watch Hours &ndash; Gold (1000 Hrs)</option>
-                  <option>Watch Hours &ndash; Platinum (2000 Hrs)</option>
-                  <option>Watch Hours &ndash; Diamond (3000 Hrs)</option>
-                  <option>Watch Hours &ndash; Ace (4000 Hrs)</option>
-                  <option>Not Sure / General Enquiry</option>
-                </select>
-
-                <span class="offer-error" id="offerPlanError">
-                  Please select an offer / plan.
-                </span>
-
-              </div>
-
-
-              <div class="field" id="offerMessageField">
-
-                <label for="offerMessage">
-                  Message <span>(Optional)</span>
-                </label>
-
-                <textarea
-                  id="offerMessage"
-                  name="message"
-                  rows="3"
-                  placeholder="Tell us anything else about your goal..."
-                ></textarea>
-
-              </div>
-
+              <input
+                type="hidden"
+                name="service"
+                value="Independence Day Offer (13-15 Aug)"
+              />
 
               <button type="submit" class="btn btn-primary">
                 🇮🇳 Claim My Independence Day Offer →
@@ -3725,8 +3662,8 @@
             </form>
 
             <p class="offer-form-note">
-              All 3 fields are required. Your details stay
-              private — we only use them to set up your offer.
+              Name and Phone Number are required. Your details
+              stay private — we only use them to set up your offer.
             </p>
 
           </div>
@@ -4830,64 +4767,33 @@
                 />
               </label>
 
-              <div class="form-row">
-
-                <label>
-                  Email Address <span>(Optional)</span>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="yourmail@example.com"
-                  />
-                </label>
-
-                <label>
-                  Phone Number *
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="98XXXXXXXX"
-                    pattern="[6-9][0-9]{9}"
-                    maxlength="10"
-                    title="Enter a valid 10 digit phone number"
-                    required
-                  />
-                </label>
-
-              </div>
-
               <label>
-                YouTube Channel URL <span>(Optional)</span>
+                Phone Number *
                 <input
-                  type="url"
-                  name="channel"
-                  placeholder="https://youtube.com/@yourchannel"
+                  type="tel"
+                  name="phone"
+                  placeholder="98XXXXXXXX"
+                  pattern="[6-9][0-9]{9}"
+                  maxlength="10"
+                  title="Enter a valid 10 digit phone number"
+                  required
                 />
               </label>
 
               <label>
-                Select a Service
-                <select name="service">
-                  <option value="" selected disabled>
-                    Select a Service
-                  </option>
-                  <option>YouTube Video Promotion</option>
-                  <option>YouTube Video SEO</option>
-                  <option>YouTube Monetization</option>
-                  <option>YouTube Revenue Service</option>
-                  <option>YouTube Video Advertising</option>
-                  <option>Video Production</option>
-                  <option>Audience Growth</option>
-                </select>
+                Video URL <span>(Optional)</span>
+                <input
+                  type="text"
+                  name="channel"
+                  placeholder="https://youtube.com/watch?v=..."
+                />
               </label>
 
-              <label>
-                Message
-                <textarea
-                  name="message"
-                  placeholder="How can we help?"
-                ></textarea>
-              </label>
+              <input
+                type="hidden"
+                name="service"
+                value="Independence Day Offer (13-15 Aug) - Contact Form"
+              />
 
               <button type="submit" class="btn btn-primary full">
                 Send Message →
@@ -4920,7 +4826,7 @@
 
           <a class="logo" href="index.html">
 
-            <img src="./inonego-logo-header.png" alt="Inonego" class="logo-img" />
+            <img src="Adstube-logo.png" alt="Adstube Logo" class="logo-img" />
 
           </a>
 
@@ -5241,15 +5147,6 @@
             return "Enter a valid 10-digit Indian mobile number.";
           }
 
-          return "";
-        },
-      },
-      {
-        input: document.getElementById("offerPlan"),
-        field: document.getElementById("offerPlanField"),
-        error: document.getElementById("offerPlanError"),
-        validate: (v) => {
-          if (!v) return "Please select an offer / plan.";
           return "";
         },
       },
