@@ -810,6 +810,27 @@ function initThankYou() {
 }
 
 /* ---------------------------------------------------------
+   Hero video: thumbnail first, YouTube loads only on click
+   --------------------------------------------------------- */
+function initVideo() {
+  $$('[data-video]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const frame = document.createElement('iframe');
+      frame.src = 'https://www.youtube-nocookie.com/embed/' + link.dataset.video + '?autoplay=1&rel=0';
+      frame.title = 'AdsTube Diwali offer video';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      const screen = document.createElement('div');
+      screen.className = 'player__screen';
+      screen.appendChild(frame);
+      link.closest('.player').classList.add('is-playing');
+      link.replaceWith(screen);
+    });
+  });
+}
+
+/* ---------------------------------------------------------
    Boot
    --------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -820,6 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initSparks();
   initFAQ();
+  initVideo();
   initLeadForm();
   initQueryForm();
   initMobileBar();
