@@ -1035,10 +1035,12 @@
 
   <!-- Diwali Offer Popup (no close button: user fills the form, then "Claim Diwali Offer" saves the lead to the Diwali Google Sheet and goes to /offers) -->
   <div id="leadPopupOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-out;" role="dialog" aria-modal="true" aria-labelledby="leadPopupTitle">
-    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl shadow-orange-500/30 relative w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto ring-2 ring-amber-400">
+    <canvas id="dlFxSky" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
+    <div id="leadPopupCard" class="z-10 bg-white rounded-2xl shadow-2xl shadow-orange-500/30 relative w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto ring-2 ring-amber-400">
 
       <!-- Festive header -->
       <div class="relative overflow-hidden bg-gradient-to-br from-[#7a0006] via-[#c1121f] to-[#e85d04] px-8 pt-8 pb-6 text-center space-y-3">
+        <canvas id="dlFxHead" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
         <span class="pointer-events-none absolute -top-2 left-4 text-3xl opacity-80 select-none" aria-hidden="true">&#10024;</span>
         <!-- Animated hanging Diwali lanterns (akash kandil) -->
         <div class="dl-lanterns pointer-events-none select-none" aria-hidden="true">
@@ -1091,18 +1093,19 @@
           </svg>
         </div>
         </div>
-        <div class="text-5xl leading-none select-none" aria-hidden="true">&#129684;</div>
-        <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-amber-400 text-[#7a0006] px-3 py-1 rounded-full shadow">
+        <div class="relative z-[1] text-5xl leading-none select-none" aria-hidden="true">&#129684;</div>
+        <span class="relative z-[1] inline-block text-[10px] font-extrabold uppercase tracking-widest bg-amber-400 text-[#7a0006] px-3 py-1 rounded-full shadow">
           Diwali Special Offer &middot; 4&ndash;6 Nov 2026
         </span>
-        <h3 id="leadPopupTitle" class="text-2xl font-black text-white leading-tight">
+        <h3 id="leadPopupTitle" class="relative z-[1] text-2xl font-black text-white leading-tight">
           Get <span class="text-amber-300">Up to 73% OFF</span><br />this Diwali
         </h3>
-        <p class="text-xs text-orange-100">YouTube promotion plans starting from just &#8377;349. Light up your channel this festive season!</p>
-        <div class="mx-auto h-px w-20 bg-amber-300"></div>
+        <p class="relative z-[1] text-xs text-orange-100">YouTube promotion plans starting from just &#8377;349. Light up your channel this festive season!</p>
+        <div class="relative z-[1] mx-auto h-px w-20 bg-amber-300"></div>
       </div>
 
-      <div class="p-8 space-y-6 bg-gradient-to-b from-amber-50 to-white">
+      <canvas id="dlFxLights" class="block w-full h-6 bg-amber-50" aria-hidden="true"></canvas>
+      <div class="px-8 pb-8 pt-4 space-y-6 bg-gradient-to-b from-amber-50 to-white">
         <form id="leadPopupForm" class="space-y-4">
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Name *</label>
@@ -1190,9 +1193,188 @@
         document.body.style.overflow = 'hidden';
         setTimeout(function () {
           modal.style.opacity = '1';
+          if (window.startDiwaliFx) window.startDiwaliFx();
         }, 20);
       }, 300);
     });
+  </script>
+
+  <!-- ===== Diwali popup: canvas fireworks, glowing lamps & string lights ===== -->
+  <script>
+  (function () {
+    var PALETTE = ['#ffd166', '#ffb703', '#fb8500', '#ff4d6d', '#f72585', '#ffffff', '#9bf6ff', '#b9fbc0', '#c77dff'];
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    function pick(arr) { return arr[(Math.random() * arr.length) | 0]; }
+    function hexA(hex, a) {
+      var n = parseInt(hex.slice(1), 16);
+      return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + Math.max(0, Math.min(1, a)).toFixed(3) + ')';
+    }
+
+    function setupCanvas(canvas) {
+      var ctx = canvas.getContext('2d');
+      var st = { canvas: canvas, ctx: ctx, w: 0, h: 0 };
+      function resize() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var r = canvas.getBoundingClientRect();
+        st.w = r.width; st.h = r.height;
+        canvas.width = Math.max(1, Math.round(r.width * dpr));
+        canvas.height = Math.max(1, Math.round(r.height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener('resize', resize);
+      return st;
+    }
+
+    // ---------- Fireworks scene: rockets/bursts, twinkling lamps, rising embers ----------
+    function Fireworks(canvas, opt) {
+      this.st = setupCanvas(canvas);
+      this.o = opt;
+      this.rockets = []; this.sparks = []; this.lamps = []; this.embers = [];
+      this.nextLaunch = 0;
+      for (var i = 0; i < opt.lamps; i++) {
+        this.lamps.push({ x: Math.random(), y: rand(0.08, 0.95), r: rand(1.2, 2.6), ph: rand(0, 6.28), sp: rand(1.5, 4), c: pick(['#ffd166', '#ffb703', '#ffe8a3', '#ff9e00']) });
+      }
+    }
+    Fireworks.prototype.launch = function () {
+      var w = this.st.w, h = this.st.h, o = this.o, x = rand(w * 0.06, w * 0.94);
+      if (o.rockets) {
+        this.rockets.push({ x: x, y: h + 5, vx: rand(-0.6, 0.6), vy: -rand(o.speed[0], o.speed[1]), ty: rand(h * 0.12, h * 0.5), c: pick(PALETTE) });
+      } else {
+        this.burst(x, rand(h * 0.1, h * 0.9));
+      }
+    };
+    Fireworks.prototype.burst = function (x, y) {
+      var o = this.o, n = rand(o.burst[0], o.burst[1]) | 0, c1 = pick(PALETTE), c2 = pick(PALETTE);
+      var ring = Math.random() < 0.35, power = rand(o.power[0], o.power[1]);
+      for (var i = 0; i < n; i++) {
+        var a = (i / n) * Math.PI * 2 + rand(-0.05, 0.05);
+        var v = ring ? power : power * Math.pow(Math.random(), 0.45);
+        this.sparks.push({ x: x, y: y, px: x, py: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, decay: rand(0.008, 0.016) * o.decayMul, c: Math.random() < 0.7 ? c1 : c2, sz: rand(1, 2.2) * o.scale, tw: Math.random() < 0.4 });
+      }
+      this.sparks.push({ x: x, y: y, px: x, py: y, vx: 0, vy: 0, life: 1, decay: 0.06, c: '#fff8d6', sz: 9 * o.scale, flash: true });
+    };
+    Fireworks.prototype.step = function (t) {
+      var ctx = this.st.ctx, w = this.st.w, h = this.st.h, o = this.o, i, p;
+      if (!w || !h) return;
+
+      // fade the previous frame (transparent canvas, soft trails)
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,' + o.fade + ')';
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+
+      if (t > this.nextLaunch) {
+        this.launch();
+        if (Math.random() < 0.3) this.launch();
+        this.nextLaunch = t + rand(o.every[0], o.every[1]);
+      }
+
+      for (i = this.rockets.length - 1; i >= 0; i--) {
+        p = this.rockets[i];
+        p.x += p.vx; p.y += p.vy; p.vy += 0.035;
+        ctx.fillStyle = p.c;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, 6.28); ctx.fill();
+        if (Math.random() < 0.6) this.sparks.push({ x: p.x, y: p.y, px: p.x, py: p.y, vx: rand(-0.3, 0.3), vy: rand(0.2, 0.8), life: 0.7, decay: 0.04, c: '#ffcf70', sz: 1 });
+        if (p.y <= p.ty || p.vy >= -0.5) { this.burst(p.x, p.y); this.rockets.splice(i, 1); }
+      }
+
+      for (i = this.sparks.length - 1; i >= 0; i--) {
+        p = this.sparks[i];
+        p.px = p.x; p.py = p.y;
+        p.vx *= 0.975; p.vy = p.vy * 0.975 + o.gravity;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) { this.sparks.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, p.tw ? p.life * (0.5 + 0.5 * Math.sin(t / 40 + i)) : p.life);
+        if (p.flash) {
+          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.sz * 3);
+          g.addColorStop(0, 'rgba(255,248,214,.9)'); g.addColorStop(1, 'rgba(255,200,80,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.sz * 3, 0, 6.28); ctx.fill();
+        } else {
+          ctx.strokeStyle = p.c; ctx.lineWidth = p.sz; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(p.x, p.y); ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // lamps burning here and there
+      for (i = 0; i < this.lamps.length; i++) {
+        p = this.lamps[i];
+        var f = 0.55 + 0.45 * Math.sin(t / 1000 * p.sp + p.ph) * (0.8 + 0.2 * Math.sin(t / 90 + i));
+        var lx = p.x * w, ly = p.y * h, rr = p.r * o.scale * (2.5 + f * 2.5);
+        var lg = ctx.createRadialGradient(lx, ly, 0, lx, ly, rr);
+        lg.addColorStop(0, 'rgba(255,250,220,' + (0.9 * f).toFixed(3) + ')');
+        lg.addColorStop(0.35, hexA(p.c, 0.55 * f));
+        lg.addColorStop(1, hexA(p.c, 0));
+        ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lx, ly, rr, 0, 6.28); ctx.fill();
+      }
+
+      // embers rising slowly
+      if (this.embers.length < o.embers && Math.random() < 0.15) {
+        this.embers.push({ x: rand(0, w), y: h + 4, vy: -rand(0.25, 0.8), sw: rand(0, 6.28), life: 1, sz: rand(0.8, 1.8) * o.scale });
+      }
+      for (i = this.embers.length - 1; i >= 0; i--) {
+        p = this.embers[i];
+        p.y += p.vy; p.sw += 0.03; p.x += Math.sin(p.sw) * 0.35; p.life -= 0.003;
+        if (p.y < -5 || p.life <= 0) { this.embers.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, p.life * (0.6 + 0.4 * Math.sin(t / 120 + i)));
+        ctx.fillStyle = '#ffb347';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, 6.28); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    };
+
+    // ---------- String of twinkling fairy lights under the header ----------
+    function Lights(canvas) { this.st = setupCanvas(canvas); }
+    Lights.prototype.step = function (t) {
+      var ctx = this.st.ctx, w = this.st.w, h = this.st.h;
+      if (!w || !h) return;
+      ctx.clearRect(0, 0, w, h);
+      var n = Math.max(6, Math.round(w / 26)), seg = w / n, sag = h * 0.4;
+      ctx.strokeStyle = 'rgba(120,53,15,.5)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (var s = 0; s < n; s++) {
+        var x0 = s * seg;
+        ctx.moveTo(x0, 1); ctx.quadraticCurveTo(x0 + seg / 2, 1 + sag * 2, x0 + seg, 1);
+      }
+      ctx.stroke();
+      var cols = ['#ff4d6d', '#ffb703', '#06d6a0', '#4cc9f0', '#fb8500', '#c77dff'];
+      for (var k = 0; k < n; k++) {
+        var x = k * seg + seg / 2, y = 1 + sag + 3;
+        var on = 0.3 + 0.7 * Math.max(0, Math.sin(t / 380 - k * 0.7));
+        var c = cols[k % cols.length];
+        var g = ctx.createRadialGradient(x, y, 0, x, y, 9);
+        g.addColorStop(0, hexA(c, 0.75 * on)); g.addColorStop(1, hexA(c, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.28); ctx.fill();
+        ctx.globalAlpha = 0.5 + 0.5 * on; ctx.fillStyle = c;
+        ctx.beginPath(); ctx.ellipse(x, y, 2.6, 3.4, 0, 0, 6.28); ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    };
+
+    var started = false;
+    window.startDiwaliFx = function () {
+      if (started) return; started = true;
+      var overlay = document.getElementById('leadPopupOverlay');
+      var scenes = [
+        // big fireworks in the sky around the form
+        new Fireworks(document.getElementById('dlFxSky'), { rockets: true, speed: [6, 9], burst: [70, 110], power: [3, 6], gravity: 0.045, decayMul: 1, scale: 1.2, fade: 0.18, every: [500, 1200], lamps: 26, embers: 40 }),
+        // small crackers and glowing lamps inside the red header
+        new Fireworks(document.getElementById('dlFxHead'), { rockets: false, burst: [26, 40], power: [1.2, 2.4], gravity: 0.025, decayMul: 1.3, scale: 0.8, fade: 0.22, every: [700, 1500], lamps: 14, embers: 14 }),
+        new Lights(document.getElementById('dlFxLights'))
+      ];
+      if (reduced) { scenes.forEach(function (sc) { sc.step(1000); }); return; }
+      (function loop(t) {
+        if (overlay.style.display === 'none') return; // popup gone: stop animating
+        if (!document.hidden) scenes.forEach(function (sc) { sc.step(t); });
+        requestAnimationFrame(loop);
+      })(performance.now());
+    };
+  })();
   </script>
 
   <!-- ===== Lead submission: Google Sheet + Email notification ===== -->
