@@ -1015,40 +1015,42 @@
     <i class="fa-brands fa-whatsapp text-xl"></i>
   </a>
 
-  <!-- Lead Capture Popup Modal -->
-  <div id="leadPopupOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-out;">
-    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl relative w-full max-w-md overflow-hidden">
-      <button id="leadPopupClose" type="button" aria-label="Close" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/70 text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+  <!-- Diwali Offer Popup (no close button: user fills the form, then "Claim Diwali Offer" saves the lead to the Diwali Google Sheet and goes to /offers) -->
+  <div id="leadPopupOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-out;" role="dialog" aria-modal="true" aria-labelledby="leadPopupTitle">
+    <div id="leadPopupCard" class="bg-white rounded-2xl shadow-2xl shadow-orange-500/30 relative w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto ring-2 ring-amber-400">
 
-      <!-- Header Accent -->
-      <div class="bg-[#0a0b22] border-b border-emerald-500/30 px-8 pt-8 pb-6 space-y-3">
-        <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full">
-          Free Consultation &mdash; No Commitment
+      <!-- Festive header -->
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#7a0006] via-[#c1121f] to-[#e85d04] px-8 pt-8 pb-6 text-center space-y-3">
+        <span class="pointer-events-none absolute -top-2 left-4 text-3xl opacity-80 select-none" aria-hidden="true">&#10024;</span>
+        <span class="pointer-events-none absolute top-3 right-5 text-2xl opacity-80 select-none" aria-hidden="true">&#127878;</span>
+        <div class="text-5xl leading-none select-none" aria-hidden="true">&#129684;</div>
+        <span class="inline-block text-[10px] font-extrabold uppercase tracking-widest bg-amber-400 text-[#7a0006] px-3 py-1 rounded-full shadow">
+          Diwali Special Offer &middot; 4&ndash;6 Nov 2026
         </span>
-        <h3 class="text-2xl font-black text-white">Get a Free Quote</h3>
-        <p class="text-xs text-slate-300">Talk to our Google Ads experts today and scale your channel safely.</p>
-        <div class="h-px w-16 bg-emerald-500"></div>
+        <h3 id="leadPopupTitle" class="text-2xl font-black text-white leading-tight">
+          Get <span class="text-amber-300">Up to 73% OFF</span><br />this Diwali
+        </h3>
+        <p class="text-xs text-orange-100">YouTube promotion plans starting from just &#8377;349. Light up your channel this festive season!</p>
+        <div class="mx-auto h-px w-20 bg-amber-300"></div>
       </div>
 
-      <div class="p-8 space-y-6">
+      <div class="p-8 space-y-6 bg-gradient-to-b from-amber-50 to-white">
         <form id="leadPopupForm" class="space-y-4">
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Name *</label>
-            <input type="text" name="name" placeholder="Your Name" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+            <input type="text" name="name" placeholder="Your Name" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-amber-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" required />
           </div>
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">WhatsApp No. *</label>
-            <input type="tel" name="phone" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="13" pattern="^(?:\+91[\-\s]?|0)?[6-9]\d{9}$" title="Enter a valid 10-digit phone number" oninput="sanitizePhoneInput(this)" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" required />
+            <input type="tel" name="phone" placeholder="98XXXXXXXX" inputmode="numeric" maxlength="13" pattern="^(?:\+91[\-\s]?|0)?[6-9]\d{9}$" title="Enter a valid 10-digit phone number" oninput="sanitizePhoneInput(this)" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-amber-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" required />
           </div>
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">YouTube Channel Link (Optional)</label>
-            <input type="url" name="channel_link" placeholder="https://youtube.com/@yourchannel" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+            <input type="url" name="channel_link" placeholder="https://youtube.com/@yourchannel" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-amber-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-gray-500 mb-1">Service Needed</label>
-            <select name="service" class="w-full bg-gray-50 text-xs px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+            <select name="service" class="w-full bg-white text-xs px-4 py-3 rounded-xl border border-amber-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
               <option value="">Select a Service</option>
               <option>YouTube Video Advertising</option>
               <option>YouTube Channel Promotion</option>
@@ -1056,40 +1058,72 @@
               <option>Custom / Enterprise Plan</option>
             </select>
           </div>
-          <button type="submit" class="w-full bg-[#00B67A] hover:bg-[#009e6a] text-white font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-lg shadow-emerald-600/20 transition">
-            Send Me My Free Plan &rarr;
+          <button id="leadPopupSubmit" type="submit" disabled class="w-full bg-gradient-to-r from-[#c1121f] to-[#e85d04] hover:from-[#a30f1a] hover:to-[#d35400] text-white font-extrabold text-sm uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-orange-600/30 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+            &#129684; Claim Diwali Offer
           </button>
+          <p class="text-center text-[10px] text-gray-500">Fill your name &amp; WhatsApp number to claim. Offer valid 4&ndash;6 Nov 2026 till 11:59 PM IST.</p>
         </form>
       </div>
     </div>
   </div>
 
   <script>
+    // Diwali Apps Script web app (same one used by /offers) — writes to its Google Sheet + emails the lead
+    var DIWALI_LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbynCiU2qKEIkTVrq5s2ktEWfyzefPrdGRBNjt1vUKk_b6CbW77K92KaxWvd5lxp49s11A/exec';
+
     document.addEventListener('DOMContentLoaded', function () {
       var modal = document.getElementById('leadPopupOverlay');
-      var closeBtn = document.getElementById('leadPopupClose');
       var form = document.getElementById('leadPopupForm');
+      var submitBtn = document.getElementById('leadPopupSubmit');
+
+      // "Claim Diwali Offer" stays disabled until name + a valid WhatsApp number are filled
+      function updateSubmitState() {
+        var name = form.querySelector('input[name="name"]').value.trim();
+        var phone = form.querySelector('input[name="phone"]').value;
+        submitBtn.disabled = !(name && isValidPhone(phone));
+      }
+      form.addEventListener('input', updateSubmitState);
+      form.addEventListener('change', updateSubmitState);
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (submitBtn.disabled) return;
+        submitBtn.disabled = true;
+
+        // Same Google Sheet ("Leads" tab) + email as the Diwali offers page (diwalilandingpageadstube)
+        var raw = new FormData(form);
+        var payload = {
+          name: String(raw.get('name') || '').trim(),
+          phone: '+91' + String(raw.get('phone') || '').replace(/\D/g, '').slice(-10),
+          service: String(raw.get('service') || '').trim(),
+          channel_link: String(raw.get('channel_link') || '').trim(),
+          source: 'Home Page Diwali Popup',
+          form_name: 'home_diwali_popup',
+          lead_type: 'lead',
+          offer: 'diwali_2026',
+          page_url: window.location.href,
+          submitted_at: new Date().toISOString()
+        };
+        // text/plain + no-cors avoids a CORS preflight; keepalive lets it finish after the redirect
+        fetch(DIWALI_LEAD_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        }).catch(function () {});
+
+        window.location.href = '/offers';
+      });
 
       setTimeout(function () {
         modal.style.display = 'flex';
         modal.style.visibility = 'visible';
+        document.body.style.overflow = 'hidden';
         setTimeout(function () {
           modal.style.opacity = '1';
         }, 20);
       }, 300);
-
-      function closePopup() {
-        modal.style.opacity = '0';
-        setTimeout(function () {
-          modal.style.display = 'none';
-          modal.style.visibility = 'hidden';
-        }, 300);
-      }
-
-      closeBtn.addEventListener('click', closePopup);
-      form.addEventListener('submit', function (e) {
-        submitLeadForm(form, 'Lead Capture Popup', e, closePopup);
-      });
     });
   </script>
 
