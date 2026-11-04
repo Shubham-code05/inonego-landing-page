@@ -54,9 +54,6 @@ const CONFIG = {
     'Test': 2500, 'Lite': 5000, 'Grow': 9000, 'Amplify': 16000, 'Pro': 30000
   },
 
-  // Pop-up form opens after this many seconds on every page load (0 = straight away)
-  popupDelay: 0,
-
   // CAPTCHA: 'checkbox' is a placeholder. For production, swap in reCAPTCHA / Turnstile
   // and return its token from getCaptchaToken() below.
   captcha: 'checkbox'
@@ -560,7 +557,7 @@ function initMobileBar() {
 }
 
 /* ---------------------------------------------------------
-   Pop-up form: opens on every page load
+   Pop-up form: opens only when a "Claim Diwali Offer" / "Buy now" button is clicked
    --------------------------------------------------------- */
 function initPopup() {
   const pop = $('[data-pop]'); if (!pop || typeof pop.showModal !== 'function') return;
@@ -578,16 +575,6 @@ function initPopup() {
     track('popup_open', { trigger: a.dataset.cta || 'claim_link' });
     $('#pop-form').elements.name.focus();
   }));
-
-  if (offerPhase().phase === 'ended') return;
-
-  // Opens on every page load (after CONFIG.popupDelay seconds)
-  setTimeout(() => {
-    if (pop.open || document.querySelector('dialog[open]')) return;
-    pop.showModal();
-    document.dispatchEvent(new Event('popupopen')); // keeps the fireworks above the pop-up
-    track('popup_open', { trigger: 'page_load' });
-  }, CONFIG.popupDelay * 1000);
 }
 
 /* ---------------------------------------------------------
