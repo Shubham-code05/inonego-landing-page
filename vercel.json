@@ -1,3 +1,7 @@
 {
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/offers", "destination": "/", "permanent": false },
+    { "source": "/offers/:path*", "destination": "/", "permanent": false }
+  ]
 }

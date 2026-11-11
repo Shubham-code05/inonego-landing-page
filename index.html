@@ -51,6 +51,8 @@
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Diwali popup styles — DISABLED (offer ended). Remove the <template> wrapper to re-enable. -->
+  <template id="diwali-popup-styles-disabled">
   <style>
     /* ===== Diwali popup: swinging lanterns ===== */
     .dl-lanterns { position: absolute; top: 0; right: 10px; display: flex; gap: 6px; align-items: flex-start; z-index: 1; }
@@ -69,6 +71,7 @@
       .dl-lantern, .dl-flame, .dl-halo, .dl-tassel { animation: none; }
     }
   </style>
+  </template>
 </head>
 <body class="bg-slate-50 text-gray-800 font-sans antialiased" x-data="{ modalOpen: false, heroUrl: '', heroPhone: '', heroError: '', selectedPlan: '', modalSource: 'Get Started Modal' }">
   <!-- Google Tag Manager (noscript) -->
@@ -1050,6 +1053,9 @@
     <i class="fa-brands fa-whatsapp text-xl"></i>
   </a>
 
+  <!-- DIWALI OFFER POPUP — DISABLED (offer ended). Everything inside this <template> is inert: not shown, scripts do not run.
+       To re-enable later, delete the <template> and </template> lines around it. -->
+  <template id="diwali-popup-disabled">
   <!-- Diwali Offer Popup (user fills the form, then "Claim Diwali Offer" saves the lead to the Diwali Google Sheet and goes to /offers; the cross also goes to /offers) -->
   <div id="leadPopupOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" style="display: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-out;" role="dialog" aria-modal="true" aria-labelledby="leadPopupTitle">
     <canvas id="dlFxSky" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
@@ -1398,6 +1404,7 @@
     };
   })();
   </script>
+  </template>
 
   <!-- ===== Lead submission: Google Sheet + Email notification ===== -->
   <script>
